@@ -127,11 +127,14 @@ jobs:
         with:
           update: true
           install: mingw-w64-x86_64-gcc
-
       - name: Check GCC
         shell: msys2 {0}
         run: |
           g++ --version
+      - name: Check print header
+        shell: msys2 {0}
+        run: |
+          g++ -std=c++23 -E -xc++ - <<<'#include <print>'
       - name: configure
         run: cmake -S . --preset=ninja-gcc -B build -DKVF_USE_FREETYPE=OFF
       - name: build debug
