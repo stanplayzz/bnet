@@ -119,34 +119,13 @@ jobs:
     runs-on: windows-2025
     steps:
       - uses: actions/checkout@v4
-
-      - uses: msys2/setup-msys2@v2
-        with:
-          update: true
-          install: mingw-w64-x86_64-gcc ninja cmake
-
-      - name: Check compiler
-        shell: msys2 {0}
-        run: |
-          which g++
-          g++ --version
-
       - name: configure
-        shell: msys2 {0}
         run: cmake -S . --preset=ninja-gcc -B build -DKVF_USE_FREETYPE=OFF
-
       - name: build debug
-        shell: msys2 {0}
         run: cmake --build build --config=Debug -- -v
-
       - name: build release
-        shell: msys2 {0}
         run: cmake --build build --config=Release -- -v
-
       - name: test debug
-        shell: msys2 {0}
         run: cd build && ctest -V -C Debug
-
       - name: test release
-        shell: msys2 {0}
         run: cd build && ctest -V -C Release
