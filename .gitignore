@@ -1,4 +1,3 @@
 .cache
-.github
 out/
 compile_commands.json
