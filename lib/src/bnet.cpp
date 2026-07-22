@@ -6,6 +6,10 @@
 #include <cassert>
 #include <memory>
 
+#if defined(_WIN32)
+#include <stdexcept>
+#endif
+
 namespace bnet {
 namespace {
 struct AddrInfoDeleter {
