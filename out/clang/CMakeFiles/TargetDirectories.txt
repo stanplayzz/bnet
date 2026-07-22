@@ -1,0 +1,9 @@
+/home/stan/projects/bnet/out/clang/CMakeFiles/edit_cache.dir
+/home/stan/projects/bnet/out/clang/CMakeFiles/rebuild_cache.dir
+/home/stan/projects/bnet/out/clang/lib/CMakeFiles/bnet.dir
+/home/stan/projects/bnet/out/clang/lib/CMakeFiles/edit_cache.dir
+/home/stan/projects/bnet/out/clang/lib/CMakeFiles/rebuild_cache.dir
+/home/stan/projects/bnet/out/clang/example/CMakeFiles/bnet-server.dir
+/home/stan/projects/bnet/out/clang/example/CMakeFiles/bnet-client.dir
+/home/stan/projects/bnet/out/clang/example/CMakeFiles/edit_cache.dir
+/home/stan/projects/bnet/out/clang/example/CMakeFiles/rebuild_cache.dir

@@ -1,0 +1,30 @@
+add_library(${package_name})
+add_library(${package_name}::${package_name} ALIAS ${package_name})
+
+target_compile_features(${package_name} PUBLIC cxx_std_23)
+
+target_include_directories(${package_name} PUBLIC
+    src
+)
+
+if(WIN32)
+    target_link_libraries(bnet PRIVATE ws2_32)
+endif()
+
+set(version_header "${CMAKE_CURRENT_BINARY_DIR}/include/${package_name}/build_version.hpp")
+configure_file(src/build_version.hpp.in "${version_header}" @ONLY)
+
+file(GLOB_RECURSE headers LIST_DIRECTORIES false "include/*.hpp")
+
+target_sources(${package_name} PUBLIC FILE_SET HEADERS
+    BASE_DIRS 
+    include "${CMAKE_CURRENT_BINARY_DIR}/include"
+    
+    FILES 
+    ${headers} 
+    "${version_header}"
+)
+
+target_sources(${package_name} PRIVATE
+    src/bnet.cpp
+)

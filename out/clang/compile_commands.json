@@ -1,0 +1,56 @@
+[
+{
+  "directory": "/home/stan/projects/bnet/out/clang",
+  "command": "/usr/bin/clang++ -DCMAKE_INTDIR=\\\"Debug\\\" -I/home/stan/projects/bnet/lib/src -I/home/stan/projects/bnet/lib/include -I/home/stan/projects/bnet/out/clang/lib/include -Wall -Wextra -Wpedantic -Wconversion -Werror=return-type -g -std=c++23 -Wall -Wextra -Wpedantic -Wconversion -Werror=return-type -o lib/CMakeFiles/bnet.dir/Debug/src/bnet.cpp.o -c /home/stan/projects/bnet/lib/src/bnet.cpp",
+  "file": "/home/stan/projects/bnet/lib/src/bnet.cpp",
+  "output": "/home/stan/projects/bnet/out/clang/lib/CMakeFiles/bnet.dir/Debug/src/bnet.cpp.o"
+},
+{
+  "directory": "/home/stan/projects/bnet/out/clang",
+  "command": "/usr/bin/clang++ -DCMAKE_INTDIR=\\\"Release\\\" -I/home/stan/projects/bnet/lib/src -I/home/stan/projects/bnet/lib/include -I/home/stan/projects/bnet/out/clang/lib/include -Wall -Wextra -Wpedantic -Wconversion -Werror=return-type -Werror -O3 -DNDEBUG -std=c++23 -Wall -Wextra -Wpedantic -Wconversion -Werror=return-type -Werror -o lib/CMakeFiles/bnet.dir/Release/src/bnet.cpp.o -c /home/stan/projects/bnet/lib/src/bnet.cpp",
+  "file": "/home/stan/projects/bnet/lib/src/bnet.cpp",
+  "output": "/home/stan/projects/bnet/out/clang/lib/CMakeFiles/bnet.dir/Release/src/bnet.cpp.o"
+},
+{
+  "directory": "/home/stan/projects/bnet/out/clang",
+  "command": "/usr/bin/clang++ -DCMAKE_INTDIR=\\\"RelWithDebInfo\\\" -I/home/stan/projects/bnet/lib/src -I/home/stan/projects/bnet/lib/include -I/home/stan/projects/bnet/out/clang/lib/include -Wall -Wextra -Wpedantic -Wconversion -Werror=return-type -Werror -O2 -g -DNDEBUG -std=c++23 -Wall -Wextra -Wpedantic -Wconversion -Werror=return-type -Werror -o lib/CMakeFiles/bnet.dir/RelWithDebInfo/src/bnet.cpp.o -c /home/stan/projects/bnet/lib/src/bnet.cpp",
+  "file": "/home/stan/projects/bnet/lib/src/bnet.cpp",
+  "output": "/home/stan/projects/bnet/out/clang/lib/CMakeFiles/bnet.dir/RelWithDebInfo/src/bnet.cpp.o"
+},
+{
+  "directory": "/home/stan/projects/bnet/out/clang",
+  "command": "/usr/bin/clang++ -DCMAKE_INTDIR=\\\"Debug\\\" -I/home/stan/projects/bnet/lib/src -I/home/stan/projects/bnet/lib/include -I/home/stan/projects/bnet/out/clang/lib/include -Wall -Wextra -Wpedantic -Wconversion -Werror=return-type -g -std=c++23 -o example/CMakeFiles/bnet-server.dir/Debug/src/server.cpp.o -c /home/stan/projects/bnet/example/src/server.cpp",
+  "file": "/home/stan/projects/bnet/example/src/server.cpp",
+  "output": "/home/stan/projects/bnet/out/clang/example/CMakeFiles/bnet-server.dir/Debug/src/server.cpp.o"
+},
+{
+  "directory": "/home/stan/projects/bnet/out/clang",
+  "command": "/usr/bin/clang++ -DCMAKE_INTDIR=\\\"Release\\\" -I/home/stan/projects/bnet/lib/src -I/home/stan/projects/bnet/lib/include -I/home/stan/projects/bnet/out/clang/lib/include -Wall -Wextra -Wpedantic -Wconversion -Werror=return-type -Werror -O3 -DNDEBUG -std=c++23 -o example/CMakeFiles/bnet-server.dir/Release/src/server.cpp.o -c /home/stan/projects/bnet/example/src/server.cpp",
+  "file": "/home/stan/projects/bnet/example/src/server.cpp",
+  "output": "/home/stan/projects/bnet/out/clang/example/CMakeFiles/bnet-server.dir/Release/src/server.cpp.o"
+},
+{
+  "directory": "/home/stan/projects/bnet/out/clang",
+  "command": "/usr/bin/clang++ -DCMAKE_INTDIR=\\\"RelWithDebInfo\\\" -I/home/stan/projects/bnet/lib/src -I/home/stan/projects/bnet/lib/include -I/home/stan/projects/bnet/out/clang/lib/include -Wall -Wextra -Wpedantic -Wconversion -Werror=return-type -Werror -O2 -g -DNDEBUG -std=c++23 -o example/CMakeFiles/bnet-server.dir/RelWithDebInfo/src/server.cpp.o -c /home/stan/projects/bnet/example/src/server.cpp",
+  "file": "/home/stan/projects/bnet/example/src/server.cpp",
+  "output": "/home/stan/projects/bnet/out/clang/example/CMakeFiles/bnet-server.dir/RelWithDebInfo/src/server.cpp.o"
+},
+{
+  "directory": "/home/stan/projects/bnet/out/clang",
+  "command": "/usr/bin/clang++ -DCMAKE_INTDIR=\\\"Debug\\\" -I/home/stan/projects/bnet/lib/src -I/home/stan/projects/bnet/lib/include -I/home/stan/projects/bnet/out/clang/lib/include -Wall -Wextra -Wpedantic -Wconversion -Werror=return-type -g -std=c++23 -o example/CMakeFiles/bnet-client.dir/Debug/src/client.cpp.o -c /home/stan/projects/bnet/example/src/client.cpp",
+  "file": "/home/stan/projects/bnet/example/src/client.cpp",
+  "output": "/home/stan/projects/bnet/out/clang/example/CMakeFiles/bnet-client.dir/Debug/src/client.cpp.o"
+},
+{
+  "directory": "/home/stan/projects/bnet/out/clang",
+  "command": "/usr/bin/clang++ -DCMAKE_INTDIR=\\\"Release\\\" -I/home/stan/projects/bnet/lib/src -I/home/stan/projects/bnet/lib/include -I/home/stan/projects/bnet/out/clang/lib/include -Wall -Wextra -Wpedantic -Wconversion -Werror=return-type -Werror -O3 -DNDEBUG -std=c++23 -o example/CMakeFiles/bnet-client.dir/Release/src/client.cpp.o -c /home/stan/projects/bnet/example/src/client.cpp",
+  "file": "/home/stan/projects/bnet/example/src/client.cpp",
+  "output": "/home/stan/projects/bnet/out/clang/example/CMakeFiles/bnet-client.dir/Release/src/client.cpp.o"
+},
+{
+  "directory": "/home/stan/projects/bnet/out/clang",
+  "command": "/usr/bin/clang++ -DCMAKE_INTDIR=\\\"RelWithDebInfo\\\" -I/home/stan/projects/bnet/lib/src -I/home/stan/projects/bnet/lib/include -I/home/stan/projects/bnet/out/clang/lib/include -Wall -Wextra -Wpedantic -Wconversion -Werror=return-type -Werror -O2 -g -DNDEBUG -std=c++23 -o example/CMakeFiles/bnet-client.dir/RelWithDebInfo/src/client.cpp.o -c /home/stan/projects/bnet/example/src/client.cpp",
+  "file": "/home/stan/projects/bnet/example/src/client.cpp",
+  "output": "/home/stan/projects/bnet/out/clang/example/CMakeFiles/bnet-client.dir/RelWithDebInfo/src/client.cpp.o"
+}
+]

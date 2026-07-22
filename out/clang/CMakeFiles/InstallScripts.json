@@ -1,0 +1,13 @@
+{
+	"Configs" : 
+	[
+		"Debug"
+	],
+	"InstallScripts" : 
+	[
+		"/home/stan/projects/bnet/out/clang/cmake_install.cmake",
+		"/home/stan/projects/bnet/out/clang/lib/cmake_install.cmake",
+		"/home/stan/projects/bnet/out/clang/example/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

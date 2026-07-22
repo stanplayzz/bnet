@@ -1,0 +1,301 @@
+{
+	"configurations" : 
+	[
+		{
+			"abstractTargets" : [],
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						2
+					],
+					"jsonFile" : "directory-.-Debug-fd6451d79dc282e2f566.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.24"
+					},
+					"projectIndex" : 0,
+					"source" : "."
+				},
+				{
+					"build" : "lib",
+					"jsonFile" : "directory-lib-Debug-705325963b77e62663a0.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.24"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "lib",
+					"targetIndexes" : 
+					[
+						0
+					]
+				},
+				{
+					"build" : "example",
+					"jsonFile" : "directory-example-Debug-d031dea513551ee5d8e8.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.24"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "example",
+					"targetIndexes" : 
+					[
+						1,
+						2
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0,
+						1,
+						2
+					],
+					"name" : "bnet",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 1,
+					"id" : "bnet::@306ed2d68c6501e8728f",
+					"jsonFile" : "target-bnet-Debug-7c416c8de2de34ec304a.json",
+					"name" : "bnet",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "bnet-client::@70983d692f648185febe",
+					"jsonFile" : "target-bnet-client-Debug-00d0114eae4b45d4fe69.json",
+					"name" : "bnet-client",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "bnet-server::@70983d692f648185febe",
+					"jsonFile" : "target-bnet-server-Debug-d99edbff22f86a213875.json",
+					"name" : "bnet-server",
+					"projectIndex" : 0
+				}
+			]
+		},
+		{
+			"abstractTargets" : [],
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						2
+					],
+					"jsonFile" : "directory-.-Release-fd6451d79dc282e2f566.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.24"
+					},
+					"projectIndex" : 0,
+					"source" : "."
+				},
+				{
+					"build" : "lib",
+					"jsonFile" : "directory-lib-Release-705325963b77e62663a0.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.24"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "lib",
+					"targetIndexes" : 
+					[
+						0
+					]
+				},
+				{
+					"build" : "example",
+					"jsonFile" : "directory-example-Release-d031dea513551ee5d8e8.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.24"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "example",
+					"targetIndexes" : 
+					[
+						1,
+						2
+					]
+				}
+			],
+			"name" : "Release",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0,
+						1,
+						2
+					],
+					"name" : "bnet",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 1,
+					"id" : "bnet::@306ed2d68c6501e8728f",
+					"jsonFile" : "target-bnet-Release-f127744de546f11f82c4.json",
+					"name" : "bnet",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "bnet-client::@70983d692f648185febe",
+					"jsonFile" : "target-bnet-client-Release-e5be291e1875bec3f9a1.json",
+					"name" : "bnet-client",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "bnet-server::@70983d692f648185febe",
+					"jsonFile" : "target-bnet-server-Release-2a8b3324bef6abc0dab9.json",
+					"name" : "bnet-server",
+					"projectIndex" : 0
+				}
+			]
+		},
+		{
+			"abstractTargets" : [],
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						2
+					],
+					"jsonFile" : "directory-.-RelWithDebInfo-fd6451d79dc282e2f566.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.24"
+					},
+					"projectIndex" : 0,
+					"source" : "."
+				},
+				{
+					"build" : "lib",
+					"jsonFile" : "directory-lib-RelWithDebInfo-705325963b77e62663a0.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.24"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "lib",
+					"targetIndexes" : 
+					[
+						0
+					]
+				},
+				{
+					"build" : "example",
+					"jsonFile" : "directory-example-RelWithDebInfo-d031dea513551ee5d8e8.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.24"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "example",
+					"targetIndexes" : 
+					[
+						1,
+						2
+					]
+				}
+			],
+			"name" : "RelWithDebInfo",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0,
+						1,
+						2
+					],
+					"name" : "bnet",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 1,
+					"id" : "bnet::@306ed2d68c6501e8728f",
+					"jsonFile" : "target-bnet-RelWithDebInfo-ff0d309678bfe9c9c398.json",
+					"name" : "bnet",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "bnet-client::@70983d692f648185febe",
+					"jsonFile" : "target-bnet-client-RelWithDebInfo-3691db09dbc87c995bc3.json",
+					"name" : "bnet-client",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "bnet-server::@70983d692f648185febe",
+					"jsonFile" : "target-bnet-server-RelWithDebInfo-f18cf06fc751c161b04d.json",
+					"name" : "bnet-server",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/stan/projects/bnet/out/clang",
+		"source" : "/home/stan/projects/bnet"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 10
+	}
+}

@@ -1,0 +1,152 @@
+{
+	"artifacts" : 
+	[
+		{
+			"path" : "example/Release/bnet-server"
+		}
+	],
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_executable",
+			"target_link_libraries"
+		],
+		"files" : 
+		[
+			"example/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 3,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 7,
+				"parent" : 0
+			}
+		]
+	},
+	"codemodelVersion" : 
+	{
+		"major" : 2,
+		"minor" : 10
+	},
+	"compileDependencies" : 
+	[
+		{
+			"backtrace" : 2,
+			"id" : "bnet::@306ed2d68c6501e8728f"
+		}
+	],
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "-Wall -Wextra -Wpedantic -Wconversion -Werror=return-type -Werror -O3 -DNDEBUG -std=c++23"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 2,
+					"path" : "/home/stan/projects/bnet/lib/src"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "/home/stan/projects/bnet/lib/include"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "/home/stan/projects/bnet/out/clang/lib/include"
+				}
+			],
+			"language" : "CXX",
+			"languageStandard" : 
+			{
+				"backtraces" : 
+				[
+					2
+				],
+				"standard" : "23"
+			},
+			"sourceIndexes" : 
+			[
+				0
+			]
+		}
+	],
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 2,
+			"id" : "bnet::@306ed2d68c6501e8728f"
+		}
+	],
+	"id" : "bnet-server::@70983d692f648185febe",
+	"link" : 
+	{
+		"commandFragments" : 
+		[
+			{
+				"fragment" : "-Wall -Wextra -Wpedantic -Wconversion -Werror=return-type -Werror -O3 -DNDEBUG",
+				"role" : "flags"
+			},
+			{
+				"fragment" : "-Wl,-rpath,\"\\$$ORIGIN\"",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "lib/Release/libbnet.a",
+				"role" : "libraries"
+			}
+		],
+		"language" : "CXX"
+	},
+	"linkLibraries" : 
+	[
+		{
+			"backtrace" : 2,
+			"id" : "bnet::@306ed2d68c6501e8728f"
+		}
+	],
+	"name" : "bnet-server",
+	"nameOnDisk" : "bnet-server",
+	"paths" : 
+	{
+		"build" : "example",
+		"source" : "example"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "example/src/server.cpp",
+			"sourceGroupIndex" : 0
+		}
+	],
+	"type" : "EXECUTABLE"
+}
