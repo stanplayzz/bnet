@@ -7,9 +7,13 @@ target_include_directories(${package_name} PUBLIC
     src
 )
 
-target_link_libraries(${PROJECT_NAME} PRIVATE
+target_link_libraries(${package_name} PUBLIC
   $<$<BOOL:${WIN32}>:ws2_32.lib>
 )
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    target_link_libraries(${package_name} PUBLIC stdc++exp)
+endif()
 
 set(version_header "${CMAKE_CURRENT_BINARY_DIR}/include/${package_name}/build_version.hpp")
 configure_file(src/build_version.hpp.in "${version_header}" @ONLY)
