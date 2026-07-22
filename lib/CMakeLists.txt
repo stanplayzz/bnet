@@ -7,9 +7,9 @@ target_include_directories(${package_name} PUBLIC
     src
 )
 
-if(WIN32)
-    target_link_libraries(bnet PRIVATE ws2_32)
-endif()
+target_link_libraries(${PROJECT_NAME} PRIVATE
+  $<$<BOOL:${WIN32}>:ws2_32.lib>
+)
 
 set(version_header "${CMAKE_CURRENT_BINARY_DIR}/include/${package_name}/build_version.hpp")
 configure_file(src/build_version.hpp.in "${version_header}" @ONLY)

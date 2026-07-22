@@ -27,6 +27,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU
         -Wall -Wextra -Wpedantic -Wconversion -Werror=return-type
         $<$<NOT:$<CONFIG:Debug>>:-Werror>
     )
+    target_link_libraries(bnet PUBLIC stdc++exp)
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     target_compile_options(${PROJECT_NAME} PRIVATE
         /W4
