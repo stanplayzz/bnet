@@ -1,5 +1,6 @@
 #include "bnet/connection.hpp"
 #include <array>
+#include <print>
 #include <stdexcept>
 
 auto main() -> int {
@@ -7,10 +8,16 @@ auto main() -> int {
 	if (!connection) { throw std::runtime_error{"Failed to create connection"}; }
 
 	auto data = std::as_bytes(std::span{"Hello, World!"});
-	connection->send(data);
+	if (auto result = connection->send(data); !result) {
+		std::println("Failed to send");
+		return 1;
+	}
 
-	std::array<std::byte, 5> reply;
-	connection->receive_exact(reply);
+	std::array<std::byte, 5> buffer;
+	if (auto result = connection->receive(buffer); !result) {
+		std::println("Failed to receive");
+		return 1;
+	}
 
 	return 0;
 }

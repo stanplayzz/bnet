@@ -6,6 +6,10 @@
 #include <cassert>
 #include <memory>
 
+#if defined(_WIN32)
+#include <stdexcept>
+#endif
+
 namespace bnet {
 namespace {
 struct AddrInfoDeleter {
@@ -14,8 +18,9 @@ struct AddrInfoDeleter {
 
 auto get_addr_info(char const* host, char const* port) -> std::unique_ptr<addrinfo, AddrInfoDeleter> {
 	addrinfo hints{};
-	hints.ai_family = AF_UNSPEC;
+	hints.ai_family = AF_INET;
 	hints.ai_socktype = SOCK_STREAM;
+	if (host == nullptr) { hints.ai_flags = AI_PASSIVE; }
 
 	addrinfo* ptr{};
 	auto const res = ::getaddrinfo(host, port, &hints, &ptr);

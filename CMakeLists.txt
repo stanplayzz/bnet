@@ -17,6 +17,11 @@ if(${PROJECT_IS_TOP_LEVEL})
     add_subdirectory(example)
 endif()
 
+message(STATUS "Compiler: ${CMAKE_CXX_COMPILER}")
+message(STATUS "Compiler ID: ${CMAKE_CXX_COMPILER_ID}")
+message(STATUS "Compiler version: ${CMAKE_CXX_COMPILER_VERSION}")
+message(STATUS "C++ standard: ${CMAKE_CXX_STANDARD}")
+
 if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     target_compile_options(${PROJECT_NAME} PRIVATE
         -Wall -Wextra -Wpedantic -Wconversion -Werror=return-type
