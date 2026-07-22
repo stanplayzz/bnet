@@ -102,6 +102,7 @@
             "name": "ninja-msvc-asan",
             "displayName": "Ninja MSVC ASan",
             "description": "ASan build configuration using Ninja Multi-config",
+            "inherits": "base-msvc",
             "binaryDir": "${sourceDir}/out/asan",
             "cacheVariables": {
                 "CMAKE_CXX_FLAGS_INIT": "-fsanitize=address"
@@ -123,9 +124,12 @@
             "description": "Build configuration using Visual Studio 17 (2022)",
             "generator": "Visual Studio 17 2022",
             "binaryDir": "${sourceDir}/out/vs",
-            "architecture": "x64",
             "cacheVariables": {
                 "CMAKE_CXX_FLAGS_INIT": "/WX"
+            },
+            "architecture": {
+                "value": "x64",
+                "strategy": "external"
             }
         }
     ],
@@ -179,16 +183,6 @@
             "name": "UBSan Debug",
             "configurePreset": "ninja-ubsan",
             "configuration": "Debug"
-        },
-        {
-            "name": "VS Debug",
-            "configurePreset": "vs22",
-            "configuration": "Debug"
-        },
-        {
-            "name": "VS Release",
-            "configurePreset": "vs22",
-            "configuration": "Release"
         }
     ],
     "testPresets": [
@@ -251,16 +245,6 @@
             "configurePreset": "ninja-ubsan",
             "configuration": "Debug",
             "inheritConfigureEnvironment": true
-        },
-        {
-            "name": "VS Debug",
-            "configurePreset": "vs22",
-            "configuration": "Debug"
-        },
-        {
-            "name": "VS Release",
-            "configurePreset": "vs22",
-            "configuration": "Release"
         }
     ]
 }

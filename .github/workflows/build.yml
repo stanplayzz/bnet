@@ -1,6 +1,20 @@
 name: ci-pr
 on: [pull_request, workflow_dispatch, push]
 jobs:
+  format-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: init
+        run: |
+            sudo apt update -yqq
+            sudo apt install -yqq clang-format-20
+            sudo update-alternatives --remove-all clang-format
+            sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-20 10
+      - name: format code
+        run: scripts/format_code.sh
+      - name: check diff
+        run: .github/format_check_diff.sh
   x64-linux-gcc:
     runs-on: ubuntu-latest
     steps:
@@ -88,17 +102,19 @@ jobs:
       - name: test release
         run: cd build && ctest -V -C Release
   x64-windows-vs22:
-    runs-on: windows-latest
+    runs-on: windows-2025
     steps:
       - uses: actions/checkout@v4
       - name: configure
-        run: cmake --preset=vs22 -DKVF_USE_FREETYPE=OFF
-
+        run: cmake -S . --preset=vs22 -B build -DKVF_USE_FREETYPE=OFF
       - name: build debug
-        run: cmake --build --preset="VS Debug" --parallel
-
+        run: cmake --build build --config=Debug --parallel
       - name: build release
-        run: cmake --build --preset="VS Release" --parallel
+        run: cmake --build build --config=Release --parallel
+      - name: test debug
+        run: cd build && ctest -V -C Debug
+      - name: test release
+        run: cd build && ctest -V -C Release
   x64-windows-clang:
     runs-on: windows-2025
     steps:
@@ -114,9 +130,14 @@ jobs:
       - name: test release
         run: cd build && ctest -V -C Release
   x64-mingw-gcc:
-    runs-on: windows-latest
+    runs-on: windows-2025
     steps:
       - uses: actions/checkout@v4
+      - name: Check compiler
+        run: |
+          g++ --version
+          where g++
+          cmake --version
       - name: configure
         run: cmake -S . --preset=ninja-gcc -B build -DKVF_USE_FREETYPE=OFF
       - name: build debug
