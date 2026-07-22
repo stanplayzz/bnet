@@ -1,4 +1,5 @@
 #include "bnet/connection.hpp"
+#include <array>
 #include <stdexcept>
 
 auto main() -> int {

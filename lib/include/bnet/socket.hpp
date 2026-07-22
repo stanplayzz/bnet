@@ -2,15 +2,16 @@
 #include "bnet/error.hpp"
 #include "platform.hpp"
 #include <span>
+#include <utility>
 
 namespace bnet {
 class Socket {
   public:
-	Socket(platform::SocketHandle fd) : m_fd(fd) {}
+	explicit Socket(platform::SocketHandle fd) : m_fd(fd) {}
 
 	Socket(Socket const&) = delete;
 	Socket& operator=(Socket const&) = delete;
-	Socket(Socket&& rhs) noexcept : m_fd(rhs.m_fd) { rhs.m_fd = platform::invalid_v; }
+	Socket(Socket&& rhs) noexcept : m_fd(std::exchange(rhs.m_fd, platform::invalid_v)) {}
 	auto operator=(Socket&& rhs) noexcept -> Socket& {
 		if (this != &rhs) {
 			if (m_fd != platform::invalid_v) { platform::close(m_fd); }
@@ -20,7 +21,7 @@ class Socket {
 		return *this;
 	}
 
-	~Socket() {
+	~Socket() noexcept {
 		if (m_fd != platform::invalid_v) { platform::close(m_fd); }
 	}
 

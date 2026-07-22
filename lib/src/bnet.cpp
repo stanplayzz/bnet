@@ -28,7 +28,12 @@ auto Socket::send(std::span<std::byte const> data) const -> Result<void> {
 	while (!data.empty()) {
 		auto const res = platform::send(m_fd, data);
 
-		if (res < 0) { return std::unexpected{Error::SendFailed}; }
+		if (res < 0) {
+#if defined(__linux__)
+			if (errno == EINTR) { continue; }
+#endif
+			return std::unexpected{Error::SendFailed};
+		}
 		if (res == 0) { return std::unexpected{Error::ConnectionClosed}; }
 
 		data = data.subspan(static_cast<std::size_t>(res));
@@ -65,7 +70,7 @@ auto Connection::connect(Address const& address) -> Result<Connection> {
 		if ((socket_fd = ::socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol)) == platform::invalid_v) {
 			continue;
 		}
-		if (::connect(socket_fd, ptr->ai_addr, ptr->ai_addrlen) != platform::error_v) {
+		if (::connect(socket_fd, ptr->ai_addr, platform::SockLen(ptr->ai_addrlen)) != platform::error_v) {
 			return Connection{Socket{socket_fd}};
 		}
 
@@ -103,7 +108,7 @@ auto Listener::create(std::uint16_t port, int backlog) -> Result<Listener> {
 
 		platform::set_reuse_addr(socket_fd);
 
-		if (::bind(socket_fd, ptr->ai_addr, ptr->ai_addrlen) == platform::error_v) {
+		if (::bind(socket_fd, ptr->ai_addr, platform::SockLen(ptr->ai_addrlen)) == platform::error_v) {
 			platform::close(socket_fd);
 			continue;
 		}
@@ -113,7 +118,7 @@ auto Listener::create(std::uint16_t port, int backlog) -> Result<Listener> {
 			continue;
 		}
 
-		return Listener{socket_fd};
+		return Listener{Socket{socket_fd}};
 	}
 
 	return std::unexpected{Error::ListenFailed};

@@ -1,4 +1,5 @@
 #include "bnet/listener.hpp"
+#include <array>
 #include <stdexcept>
 
 auto main() -> int {
