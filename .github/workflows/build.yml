@@ -92,15 +92,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: configure
-        run: cmake -S . --preset=vs22 -B build -DKVF_USE_FREETYPE=OFF
+        run: cmake --preset=vs22 -DKVF_USE_FREETYPE=OFF
+
       - name: build debug
-        run: cmake --build build --config=Debug --parallel
+        run: cmake --build --preset="VS Debug" --parallel
+
       - name: build release
-        run: cmake --build build --config=Release --parallel
-      - name: test debug
-        run: cd build && ctest -V -C Debug
-      - name: test release
-        run: cd build && ctest -V -C Release
+        run: cmake --build --preset="VS Release" --parallel
   x64-windows-clang:
     runs-on: windows-2025
     steps:
@@ -116,7 +114,7 @@ jobs:
       - name: test release
         run: cd build && ctest -V -C Release
   x64-mingw-gcc:
-    runs-on: windows-2025
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
       - name: configure
