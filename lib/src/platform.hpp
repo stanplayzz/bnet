@@ -1,4 +1,5 @@
 #pragma once
+#include "bnet/socket_handle.hpp"
 #include <cstdint>
 #include <span>
 
@@ -29,7 +30,6 @@
 namespace bnet::platform {
 #if defined(__linux__)
 
-using SocketHandle = int;
 using SockLen = socklen_t;
 constexpr auto invalid_v = SocketHandle{-1};
 constexpr auto error_v = SocketHandle{-1};
@@ -81,7 +81,6 @@ inline auto set_send_timeout(SocketHandle const socket, std::int64_t millis) -> 
 
 #elif defined(_WIN32)
 
-using SocketHandle = SOCKET;
 using SockLen = int;
 constexpr auto invalid_v = INVALID_SOCKET;
 constexpr auto error_v = SOCKET_ERROR;

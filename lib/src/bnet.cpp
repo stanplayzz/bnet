@@ -5,6 +5,7 @@
 #include "platform.hpp"
 #include <cstring>
 #include <memory>
+#include <utility>
 
 #if defined(_WIN32)
 #include <stdexcept>
@@ -76,6 +77,28 @@ auto Socket::receive_exact(std::span<std::byte> buffer) const -> Result<void> {
 	}
 
 	return {};
+}
+
+Socket::Socket(Socket&& rhs) noexcept : m_fd(std::exchange(rhs.m_fd, platform::invalid_v)) {}
+
+auto Socket::operator=(Socket&& rhs) noexcept -> Socket& {
+	if (this != &rhs) {
+		if (m_fd != platform::invalid_v) {
+			platform::shutdown(m_fd);
+			platform::close(m_fd);
+		}
+		m_fd = rhs.m_fd;
+		rhs.m_fd = platform::invalid_v;
+	}
+	return *this;
+}
+
+Socket::~Socket() noexcept {
+	if (m_fd != platform::invalid_v) {
+		platform::shutdown(m_fd);
+		platform::close(m_fd);
+		m_fd = platform::invalid_v;
+	}
 }
 
 auto Connection::connect(Address const& address) -> Result<Connection> {
@@ -198,6 +221,16 @@ auto Listener::accept() -> Result<Connection> {
 
 		return Connection{Socket{fd}};
 	}
+}
+
+auto Listener::set_timeout(std::chrono::milliseconds timeout) -> Result<void> {
+	if (platform::set_recv_timeout(m_socket.fd(), timeout.count()) == platform::error_v) {
+		return std::unexpected{Error::SetSockOptFailed};
+	}
+	if (platform::set_send_timeout(m_socket.fd(), timeout.count()) == platform::error_v) {
+		return std::unexpected{Error::SetSockOptFailed};
+	}
+	return {};
 }
 
 Context::Context() {

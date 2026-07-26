@@ -1,7 +1,9 @@
 #pragma once
 
 namespace bnet {
-// Context class needed for Windows WSA initialization, not needed on other platforms.
+/// @brief RAII wrapper for platform network stack initialization.
+///
+/// A single context must outlive every Socket/Connection/Listener in the program.
 class Context {
   public:
 	Context();

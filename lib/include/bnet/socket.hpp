@@ -1,36 +1,20 @@
 #pragma once
 #include "bnet/error.hpp"
-#include "platform.hpp"
+#include "bnet/socket_handle.hpp"
 #include <span>
-#include <utility>
 
 namespace bnet {
+/// @brief Wrapper over a raw OS socket handle
 class Socket {
   public:
 	explicit Socket(platform::SocketHandle fd) : m_fd(fd) {}
 
 	Socket(Socket const&) = delete;
 	Socket& operator=(Socket const&) = delete;
-	Socket(Socket&& rhs) noexcept : m_fd(std::exchange(rhs.m_fd, platform::invalid_v)) {}
-	auto operator=(Socket&& rhs) noexcept -> Socket& {
-		if (this != &rhs) {
-			if (m_fd != platform::invalid_v) {
-				platform::shutdown(m_fd);
-				platform::close(m_fd);
-			}
-			m_fd = rhs.m_fd;
-			rhs.m_fd = platform::invalid_v;
-		}
-		return *this;
-	}
+	Socket(Socket&& rhs) noexcept;
+	auto operator=(Socket&& rhs) noexcept -> Socket&;
 
-	~Socket() noexcept {
-		if (m_fd != platform::invalid_v) {
-			platform::shutdown(m_fd);
-			platform::close(m_fd);
-			m_fd = platform::invalid_v;
-		}
-	}
+	~Socket() noexcept;
 
 	[[nodiscard]] auto send(std::span<std::byte const> data) const -> Result<void>;
 	[[nodiscard]] auto receive(std::span<std::byte> buffer) const -> Result<std::size_t>;
@@ -39,6 +23,6 @@ class Socket {
 	[[nodiscard]] auto fd() const noexcept -> platform::SocketHandle { return m_fd; }
 
   private:
-	platform::SocketHandle m_fd{platform::invalid_v};
+	platform::SocketHandle m_fd{static_cast<platform::SocketHandle>(-1)};
 };
 } // namespace bnet
