@@ -36,6 +36,7 @@ constexpr auto to_string_view(Error const error) -> std::string_view {
 	case Error::ConnectionClosed: return "ConnectionClosed";
 	case Error::TimedOut: return "TimedOut";
 	}
+	return "UnknownError";
 }
 
 template <typename Type>
