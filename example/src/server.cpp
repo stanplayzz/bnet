@@ -11,13 +11,16 @@ auto main() -> int {
 	if (!connection) { throw std::runtime_error{"Failed to create connection"}; }
 
 	std::array<std::byte, 1024> buffer{};
-	if (auto result = connection->receive(buffer); !result) {
-		std::println("Failed to receive");
+	auto result = connection->receive_framed(buffer);
+	if (!result) {
+		std::println("Failed to receive, {}", bnet::to_string_view(result.error()));
 		return 1;
 	}
 
-	if (auto result = connection->send(buffer); !result) {
-		std::println("Failed to send");
+	auto data = std::span{buffer}.first(*result);
+
+	if (auto result = connection->send_framed(data); !result) {
+		std::println("Failed to send, {}", bnet::to_string_view(result.error()));
 		return 1;
 	}
 

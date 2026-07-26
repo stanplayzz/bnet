@@ -14,7 +14,10 @@ class Socket {
 	Socket(Socket&& rhs) noexcept : m_fd(std::exchange(rhs.m_fd, platform::invalid_v)) {}
 	auto operator=(Socket&& rhs) noexcept -> Socket& {
 		if (this != &rhs) {
-			if (m_fd != platform::invalid_v) { platform::close(m_fd); }
+			if (m_fd != platform::invalid_v) {
+				platform::shutdown(m_fd);
+				platform::close(m_fd);
+			}
 			m_fd = rhs.m_fd;
 			rhs.m_fd = platform::invalid_v;
 		}
@@ -22,7 +25,11 @@ class Socket {
 	}
 
 	~Socket() noexcept {
-		if (m_fd != platform::invalid_v) { platform::close(m_fd); }
+		if (m_fd != platform::invalid_v) {
+			platform::shutdown(m_fd);
+			platform::close(m_fd);
+			m_fd = platform::invalid_v;
+		}
 	}
 
 	[[nodiscard]] auto send(std::span<std::byte const> data) const -> Result<void>;
