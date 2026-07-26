@@ -3,8 +3,9 @@ add_library(${package_name}::${package_name} ALIAS ${package_name})
 
 target_compile_features(${package_name} PUBLIC cxx_std_23)
 
-target_include_directories(${package_name} PUBLIC
-    src
+target_include_directories(${package_name} 
+    PUBLIC include
+    PRIVATE src
 )
 
 target_link_libraries(${package_name} PUBLIC
