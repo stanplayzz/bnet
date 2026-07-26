@@ -9,7 +9,7 @@ target_include_directories(${package_name} PUBLIC
 
 target_link_libraries(${package_name} PUBLIC
   $<$<BOOL:${WIN32}>:ws2_32.lib>
-  "-lstdc++exp"
+  $<$<BOOL:${MINGW}>:-lstdc++exp>
 )
 
 set(version_header "${CMAKE_CURRENT_BINARY_DIR}/include/${package_name}/build_version.hpp")
