@@ -95,7 +95,7 @@ auto UDPSocket::send_to(std::span<std::byte const> data, Address const& address)
 	for (auto* ptr = info.get(); ptr != nullptr; ptr = ptr->ai_next) {
 		if (ptr->ai_family != AF_INET) { continue; }
 
-		auto const res = platform::sendto(m_socket.fd(), data, ptr->ai_addr, ptr->ai_addrlen);
+		auto const res = platform::sendto(m_socket.fd(), data, ptr->ai_addr, platform::SockLen(ptr->ai_addrlen));
 		if (res == platform::error_v) { return std::unexpected{Error::SendFailed}; }
 		return {};
 	}
