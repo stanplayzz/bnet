@@ -56,13 +56,13 @@ inline auto set_reuse_addr(SocketHandle const socket) -> std::int64_t {
 }
 
 inline auto set_no_delay(SocketHandle const socket, bool enabled) -> std::int64_t {
-	int value_v{enabled ? 1 : 0};
-	return ::setsockopt(socket, IPPROTO_TCP, TCP_NODELAY, &value_v, sizeof(value_v));
+	int value{enabled ? 1 : 0};
+	return ::setsockopt(socket, IPPROTO_TCP, TCP_NODELAY, &value, sizeof(value));
 }
 
 inline auto set_v6_only(SocketHandle socket, bool enabled) -> std::int64_t {
-	int value_v{enabled ? 1 : 0};
-	return ::setsockopt(socket, IPPROTO_IPV6, IPV6_V6ONLY, &value_v, sizeof(value_v));
+	int value{enabled ? 1 : 0};
+	return ::setsockopt(socket, IPPROTO_IPV6, IPV6_V6ONLY, &value, sizeof(value));
 }
 
 inline auto set_recv_timeout(SocketHandle const socket, std::int64_t millis) -> std::int64_t {
@@ -77,6 +77,11 @@ inline auto set_send_timeout(SocketHandle const socket, std::int64_t millis) -> 
 	tv.tv_sec = static_cast<time_t>(millis / 1000);
 	tv.tv_usec = static_cast<suseconds_t>((millis % 1000) * 1000);
 	return ::setsockopt(socket, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv));
+}
+
+inline auto set_broadcast(SocketHandle const socket, bool enabled) -> std::int64_t {
+	int value{enabled ? 1 : 0};
+	return ::setsockopt(socket, SOL_SOCKET, SO_BROADCAST, &value, sizeof(value));
 }
 
 #elif defined(_WIN32)
@@ -110,27 +115,33 @@ inline auto set_reuse_addr(SocketHandle const socket) -> std::int64_t {
 }
 
 inline auto set_no_delay(SocketHandle const socket, bool enabled) -> std::int64_t {
-	BOOL value_v{enabled ? 1 : 0};
-	void const* erased = &value_v;
-	return ::setsockopt(socket, IPPROTO_TCP, TCP_NODELAY, static_cast<char const*>(erased), sizeof(value_v));
+	BOOL value{enabled ? 1 : 0};
+	void const* erased = &value;
+	return ::setsockopt(socket, IPPROTO_TCP, TCP_NODELAY, static_cast<char const*>(erased), sizeof(value));
 }
 
 inline auto set_v6_only(SocketHandle const socket, bool enabled) -> std::int64_t {
-	BOOL value_v{enabled ? 1 : 0};
-	void const* erased = &value_v;
-	return ::setsockopt(socket, IPPROTO_IPV6, IPV6_V6ONLY, static_cast<char const*>(erased), sizeof(value_v));
+	BOOL value{enabled ? 1 : 0};
+	void const* erased = &value;
+	return ::setsockopt(socket, IPPROTO_IPV6, IPV6_V6ONLY, static_cast<char const*>(erased), sizeof(value));
 }
 
 inline auto set_recv_timeout(SocketHandle const socket, std::int64_t millis) -> std::int64_t {
-	DWORD value_v = static_cast<DWORD>(millis);
-	void const* erased = &value_v;
-	return ::setsockopt(socket, SOL_SOCKET, SO_RCVTIMEO, static_cast<char const*>(erased), sizeof(value_v));
+	DWORD value = static_cast<DWORD>(millis);
+	void const* erased = &value;
+	return ::setsockopt(socket, SOL_SOCKET, SO_RCVTIMEO, static_cast<char const*>(erased), sizeof(value));
 }
 
 inline auto set_send_timeout(SocketHandle const socket, std::int64_t millis) -> std::int64_t {
-	DWORD value_v = static_cast<DWORD>(millis);
-	void const* erased = &value_v;
-	return ::setsockopt(socket, SOL_SOCKET, SO_SNDTIMEO, static_cast<char const*>(erased), sizeof(value_v));
+	DWORD value = static_cast<DWORD>(millis);
+	void const* erased = &value;
+	return ::setsockopt(socket, SOL_SOCKET, SO_SNDTIMEO, static_cast<char const*>(erased), sizeof(value));
+}
+
+inline auto set_broadcast(SocketHandle const socket, bool enabled) -> std::int64_t {
+	DWORD value{enabled ? 1 : 0};
+	void const* erased = &value;
+	return ::setsockopt(socket, SOL_SOCKET, SO_BROADCAST, static_cast<char const*>(erased), sizeof(value));
 }
 
 #endif
