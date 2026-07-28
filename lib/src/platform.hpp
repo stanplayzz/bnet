@@ -139,7 +139,7 @@ inline auto set_send_timeout(SocketHandle const socket, std::int64_t millis) -> 
 }
 
 inline auto set_broadcast(SocketHandle const socket, bool enabled) -> std::int64_t {
-	DWORD value{enabled ? 1 : 0};
+	BOOL value{enabled ? 1 : 0};
 	void const* erased = &value;
 	return ::setsockopt(socket, SOL_SOCKET, SO_BROADCAST, static_cast<char const*>(erased), sizeof(value));
 }
