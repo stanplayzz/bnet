@@ -127,7 +127,7 @@ inline auto receive(SocketHandle const socket, std::span<std::byte> buffer) -> s
 inline auto recvfrom(SocketHandle const socket, std::span<std::byte> buffer, sockaddr* addr, SockLen* addr_len)
 	-> std::int64_t {
 	void* erased = buffer.data();
-	return ::recvfrom(socket, static_cast<char*>(erased), static_cast<int>(buffer.size()), 0, addr, &addr_len);
+	return ::recvfrom(socket, static_cast<char*>(erased), static_cast<int>(buffer.size()), 0, addr, addr_len);
 }
 
 inline auto set_reuse_addr(SocketHandle const socket) -> std::int64_t {
