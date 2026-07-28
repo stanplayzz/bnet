@@ -121,8 +121,8 @@ auto UDPSocket::receive_from(std::span<std::byte> buffer, Address& address) cons
 	auto host = std::array<char, NI_MAXHOST>{};
 	auto service = std::array<char, NI_MAXSERV>{};
 	// NOLINTNEXTLINE
-	if (::getnameinfo(reinterpret_cast<sockaddr*>(&storage), len, host.data(), host.size(), service.data(),
-					  service.size(), NI_NUMERICHOST | NI_NUMERICSERV) == 0) {
+	if (::getnameinfo(reinterpret_cast<sockaddr*>(&storage), len, host.data(), platform::SockLen(host.size()),
+					  service.data(), platform::SockLen(service.size()), NI_NUMERICHOST | NI_NUMERICSERV) == 0) {
 		address.host = host.data();
 		address.port = static_cast<std::uint16_t>(std::strtoul(service.data(), nullptr, 10));
 	}
