@@ -3,6 +3,7 @@
 #include "bnet/listener.hpp"
 #include "bnet/socket.hpp"
 #include "platform.hpp"
+#include <array>
 #include <cstring>
 #include <memory>
 #include <utility>
