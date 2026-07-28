@@ -117,13 +117,13 @@ auto UDPSocket::receive_from(std::span<std::byte> buffer, Address& address) cons
 		return std::unexpected{Error::ReceiveFailed};
 	}
 
-	auto host = char(NI_MAXHOST);
-	auto service = char(NI_MAXSERV);
-	// NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-	if (::getnameinfo(reinterpret_cast<sockaddr*>(&storage), len, &host, sizeof(host), &service, sizeof(service),
-					  NI_NUMERICHOST | NI_NUMERICSERV) == 0) {
-		address.host = host;
-		address.port = static_cast<std::uint16_t>(std::strtoul(&service, nullptr, 10));
+	auto host = std::array<char, NI_MAXHOST>{};
+	auto service = std::array<char, NI_MAXSERV>{};
+	// NOLINTNEXTLINE
+	if (::getnameinfo(reinterpret_cast<sockaddr*>(&storage), len, host.data(), host.size(), service.data(),
+					  service.size(), NI_NUMERICHOST | NI_NUMERICSERV) == 0) {
+		address.host = host.data();
+		address.port = static_cast<std::uint16_t>(std::strtoul(service.data(), nullptr, 10));
 	}
 
 	return res;
