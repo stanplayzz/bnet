@@ -46,8 +46,18 @@ inline auto send(SocketHandle const socket, std::span<std::byte const> data) -> 
 	return ::send(socket, data.data(), data.size(), MSG_NOSIGNAL);
 }
 
+inline auto sendto(SocketHandle const socket, std::span<std::byte const> data, sockaddr* addr, SockLen addr_len)
+	-> std::int64_t {
+	return ::sendto(socket, data.data(), data.size(), 0, addr, addr_len);
+}
+
 inline auto receive(SocketHandle const socket, std::span<std::byte> buffer) -> std::int64_t {
 	return ::recv(socket, buffer.data(), buffer.size(), 0);
+}
+
+inline auto recvfrom(SocketHandle const socket, std::span<std::byte> buffer, sockaddr* addr, SockLen* addr_len)
+	-> std::int64_t {
+	return ::recvfrom(socket, buffer.data(), buffer.size(), 0, addr, addr_len);
 }
 
 inline auto set_reuse_addr(SocketHandle const socket) -> std::int64_t {
@@ -103,9 +113,21 @@ inline auto send(SocketHandle const socket, std::span<std::byte const> data) -> 
 	return ::send(socket, static_cast<char const*>(erased), int(data.size()), 0);
 }
 
+inline auto sendto(SocketHandle const socket, std::span<std::byte const> data, sockaddr* addr, SockLen addr_len)
+	-> std::int64_t {
+	void const* erased = data.data();
+	return ::sendto(socket, static_cast<char const*>(erased), static_cast<int>(data.size()), 0, addr, addr_len);
+}
+
 inline auto receive(SocketHandle const socket, std::span<std::byte> buffer) -> std::int64_t {
 	void* erased = buffer.data();
 	return ::recv(socket, static_cast<char*>(erased), int(buffer.size()), 0);
+}
+
+inline auto recvfrom(SocketHandle const socket, std::span<std::byte> buffer, sockaddr* addr, SockLen* addr_len)
+	-> std::int64_t {
+	void* erased = buffer.data();
+	return ::recvfrom(socket, static_cast<char*>(erased), static_cast<int>(buffer.size()), 0, addr, &addr_len);
 }
 
 inline auto set_reuse_addr(SocketHandle const socket) -> std::int64_t {

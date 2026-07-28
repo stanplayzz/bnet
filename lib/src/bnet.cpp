@@ -95,9 +95,7 @@ auto UDPSocket::send_to(std::span<std::byte const> data, Address const& address)
 	for (auto* ptr = info.get(); ptr != nullptr; ptr = ptr->ai_next) {
 		if (ptr->ai_family != AF_INET) { continue; }
 
-		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-		auto const res = ::sendto(m_socket.fd(), reinterpret_cast<char const*>(data.data()), data.size(), 0,
-								  ptr->ai_addr, platform::SockLen(ptr->ai_addrlen));
+		auto const res = platform::sendto(m_socket.fd(), data, ptr->ai_addr, ptr->ai_addrlen);
 		if (res == platform::error_v) { return std::unexpected{Error::SendFailed}; }
 		return {};
 	}
@@ -112,8 +110,7 @@ auto UDPSocket::receive_from(std::span<std::byte> buffer, Address& address) cons
 	auto len = platform::SockLen(sizeof(storage));
 
 	// NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-	auto res = ::recvfrom(m_socket.fd(), reinterpret_cast<char*>(buffer.data()), buffer.size(), 0,
-						  reinterpret_cast<sockaddr*>(&storage), &len); // NOLINT
+	auto res = platform::recvfrom(m_socket.fd(), buffer, reinterpret_cast<sockaddr*>(&storage), &len);
 
 	if (res < 0) {
 		if (platform::timed_out()) { return std::unexpected{Error::TimedOut}; }
