@@ -3,6 +3,7 @@
 #include "bnet/listener.hpp"
 #include "bnet/socket.hpp"
 #include "platform.hpp"
+#include <array>
 #include <cstring>
 #include <memory>
 #include <utility>
@@ -37,45 +38,10 @@ auto get_addr_info(char const* host, char const* port) -> std::unique_ptr<addrin
 }
 } // namespace
 
-auto Socket::send(std::span<std::byte const> data) const -> Result<void> {
-	while (!data.empty()) {
-		auto const res = platform::send(m_fd, data);
-
-		if (res < 0) {
-			if (platform::interrupted()) { continue; }
-			if (platform::timed_out()) { return std::unexpected{Error::TimedOut}; }
-			return std::unexpected{Error::SendFailed};
-		}
-		if (res == 0) { return std::unexpected{Error::ConnectionClosed}; }
-
-		data = data.subspan(static_cast<std::size_t>(res));
+auto UDPSocket::set_broadcast(bool enabled) const -> Result<void> {
+	if (platform::set_broadcast(m_socket.fd(), enabled) == platform::error_v) {
+		return std::unexpected{Error::SetSockOptFailed};
 	}
-
-	return {};
-}
-
-auto Socket::receive(std::span<std::byte> buffer) const -> Result<std::size_t> {
-	auto const res = platform::receive(m_fd, buffer);
-	if (res < 0) {
-		if (platform::timed_out()) { return std::unexpected{Error::TimedOut}; }
-		return std::unexpected{Error::ReceiveFailed};
-	}
-	if (res == 0) { return std::unexpected{Error::ConnectionClosed}; }
-	return res;
-}
-
-auto Socket::receive_exact(std::span<std::byte> buffer) const -> Result<void> {
-	while (!buffer.empty()) {
-		auto const res = platform::receive(m_fd, buffer);
-		if (res < 0) {
-			if (platform::interrupted()) { continue; }
-			if (platform::timed_out()) { return std::unexpected{Error::TimedOut}; }
-			return std::unexpected{Error::ReceiveFailed};
-		}
-		if (res == 0) { return std::unexpected{Error::ConnectionClosed}; }
-		buffer = buffer.subspan(std::size_t(res));
-	}
-
 	return {};
 }
 
@@ -101,6 +67,79 @@ Socket::~Socket() noexcept {
 	}
 }
 
+auto UDPSocket::bind(std::uint16_t port) -> Result<UDPSocket> {
+	auto fd = ::socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+	if (fd == platform::invalid_v) { return std::unexpected{Error::SocketCreationFailed}; }
+
+	platform::set_reuse_addr(fd);
+
+	auto address = sockaddr_in{};
+	address.sin_family = AF_INET;
+	address.sin_port = htons(port);
+	address.sin_addr.s_addr = htonl(INADDR_ANY);
+
+	if (::bind(fd, reinterpret_cast<sockaddr*>(&address), sizeof(address))) { // NOLINT
+		platform::close(fd);
+		return std::unexpected{Error::BindFailed};
+	}
+
+	return UDPSocket{fd};
+}
+
+auto UDPSocket::send_to(std::span<std::byte const> data, Address const& address) const -> Result<void> {
+	if (data.empty()) { return std::unexpected{Error::InvalidArgument}; }
+
+	auto port = std::to_string(address.port);
+	auto info = get_addr_info(address.host.c_str(), port.c_str());
+	if (!info) { return std::unexpected{Error::AddressResolutionFailed}; }
+
+	for (auto* ptr = info.get(); ptr != nullptr; ptr = ptr->ai_next) {
+		if (ptr->ai_family != AF_INET) { continue; }
+
+		auto const res = platform::sendto(m_socket.fd(), data, ptr->ai_addr, platform::SockLen(ptr->ai_addrlen));
+		if (res == platform::error_v) { return std::unexpected{Error::SendFailed}; }
+		return {};
+	}
+
+	return std::unexpected{Error::AddressResolutionFailed};
+}
+
+auto UDPSocket::receive_from(std::span<std::byte> buffer, Address& address) const -> Result<std::size_t> {
+	if (buffer.empty()) { return std::unexpected{Error::InvalidArgument}; }
+
+	auto storage = sockaddr_storage{};
+	auto len = platform::SockLen(sizeof(storage));
+
+	// NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+	auto res = platform::recvfrom(m_socket.fd(), buffer, reinterpret_cast<sockaddr*>(&storage), &len);
+
+	if (res < 0) {
+		if (platform::timed_out()) { return std::unexpected{Error::TimedOut}; }
+		return std::unexpected{Error::ReceiveFailed};
+	}
+
+	auto host = std::array<char, NI_MAXHOST>{};
+	auto service = std::array<char, NI_MAXSERV>{};
+	// NOLINTNEXTLINE
+	if (::getnameinfo(reinterpret_cast<sockaddr*>(&storage), len, host.data(), platform::SockLen(host.size()),
+					  service.data(), platform::SockLen(service.size()), NI_NUMERICHOST | NI_NUMERICSERV) == 0) {
+		address.host = host.data();
+		address.port = static_cast<std::uint16_t>(std::strtoul(service.data(), nullptr, 10));
+	}
+
+	return res;
+}
+
+auto UDPSocket::set_timeout(std::chrono::milliseconds timeout) -> Result<void> {
+	if (platform::set_recv_timeout(m_socket.fd(), timeout.count()) == platform::error_v) {
+		return std::unexpected{Error::SetSockOptFailed};
+	}
+	if (platform::set_send_timeout(m_socket.fd(), timeout.count()) == platform::error_v) {
+		return std::unexpected{Error::SetSockOptFailed};
+	}
+	return {};
+}
+
 auto Connection::connect(Address const& address) -> Result<Connection> {
 	auto port = std::to_string(address.port);
 	auto info = get_addr_info(address.host.c_str(), port.c_str());
@@ -124,18 +163,49 @@ auto Connection::connect(Address const& address) -> Result<Connection> {
 auto Connection::send(std::span<std::byte const> data) -> Result<void> {
 	if (data.empty()) { return std::unexpected{Error::InvalidArgument}; }
 
-	return m_socket.send(data);
+	while (!data.empty()) {
+		auto const res = platform::send(m_socket.fd(), data);
+
+		if (res < 0) {
+			if (platform::interrupted()) { continue; }
+			if (platform::timed_out()) { return std::unexpected{Error::TimedOut}; }
+			return std::unexpected{Error::SendFailed};
+		}
+		if (res == 0) { return std::unexpected{Error::ConnectionClosed}; }
+
+		data = data.subspan(static_cast<std::size_t>(res));
+	}
+
+	return {};
 }
+
 auto Connection::receive(std::span<std::byte> buffer) -> Result<std::size_t> {
 	if (buffer.empty()) { return std::unexpected{Error::InvalidArgument}; }
 
-	return m_socket.receive(buffer);
+	auto const res = platform::receive(m_socket.fd(), buffer);
+	if (res < 0) {
+		if (platform::timed_out()) { return std::unexpected{Error::TimedOut}; }
+		return std::unexpected{Error::ReceiveFailed};
+	}
+	if (res == 0) { return std::unexpected{Error::ConnectionClosed}; }
+	return res;
 }
 
 auto Connection::receive_exact(std::span<std::byte> buffer) -> Result<void> {
 	if (buffer.empty()) { return std::unexpected{Error::InvalidArgument}; }
 
-	return m_socket.receive_exact(buffer);
+	while (!buffer.empty()) {
+		auto const res = platform::receive(m_socket.fd(), buffer);
+		if (res < 0) {
+			if (platform::interrupted()) { continue; }
+			if (platform::timed_out()) { return std::unexpected{Error::TimedOut}; }
+			return std::unexpected{Error::ReceiveFailed};
+		}
+		if (res == 0) { return std::unexpected{Error::ConnectionClosed}; }
+		buffer = buffer.subspan(std::size_t(res));
+	}
+
+	return {};
 }
 
 auto Connection::send_framed(std::span<std::byte const> data) -> Result<void> {
@@ -147,21 +217,21 @@ auto Connection::send_framed(std::span<std::byte const> data) -> Result<void> {
 	};
 	auto const header_bytes = std::as_bytes(std::span{&header, 1});
 
-	if (auto result = m_socket.send(header_bytes); !result) { return result; }
-	return m_socket.send(data);
+	if (auto result = send(header_bytes); !result) { return result; }
+	return send(data);
 }
 
 auto Connection::receive_framed(std::span<std::byte> buffer) -> Result<std::size_t> {
 	auto header = Header{};
 	auto header_buf = std::as_writable_bytes(std::span{&header, 1});
-	if (auto result = m_socket.receive_exact(header_buf); !result) { return std::unexpected{result.error()}; }
+	if (auto result = receive_exact(header_buf); !result) { return std::unexpected{result.error()}; }
 
 	auto const version = ntohl(header.version);
 	auto const len = ntohl(header.size);
 
 	if (version != protocol_version_v) { return std::unexpected{Error::ProtocolMismatch}; }
 	if (len > buffer.size()) { return std::unexpected{Error::InvalidArgument}; }
-	if (auto result = m_socket.receive_exact(buffer.first(len)); !result) { return std::unexpected{result.error()}; }
+	if (auto result = receive_exact(buffer.first(len)); !result) { return std::unexpected{result.error()}; }
 	return len;
 }
 
