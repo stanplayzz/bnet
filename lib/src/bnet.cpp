@@ -286,9 +286,11 @@ auto Listener::accept() -> Result<Connection> {
 		auto fd = ::accept(m_socket.fd(), nullptr, nullptr);
 		if (fd == platform::invalid_v) {
 			if (platform::interrupted()) { continue; }
+			if (platform::would_block() && !m_blocking) { return std::unexpected{Error::TimedOut}; }
 			return std::unexpected{Error::AcceptFailed};
 		}
 
+		if (!m_blocking) { platform::set_non_blocking(fd, false); }
 		return Connection{Socket{fd}};
 	}
 }
@@ -300,6 +302,14 @@ auto Listener::set_timeout(std::chrono::milliseconds timeout) -> Result<void> {
 	if (platform::set_send_timeout(m_socket.fd(), timeout.count()) == platform::error_v) {
 		return std::unexpected{Error::SetSockOptFailed};
 	}
+	return {};
+}
+
+auto Listener::set_blocking(bool enabled) -> Result<void> {
+	if (platform::set_non_blocking(m_socket.fd(), !enabled) == platform::error_v) {
+		return std::unexpected{Error::SetSockOptFailed};
+	}
+	m_blocking = enabled;
 	return {};
 }
 

@@ -22,7 +22,12 @@ class Listener {
 	/// @param timeout Maximum time to wait per send/receive call.
 	auto set_timeout(std::chrono::milliseconds timeout) -> Result<void>;
 
+	/// @brief Set whether the socket should block
+	/// @param enabled enable or disable blocking
+	auto set_blocking(bool enabled) -> Result<void>;
+
   private:
+	bool m_blocking{true};
 	Socket m_socket;
 };
 } // namespace bnet

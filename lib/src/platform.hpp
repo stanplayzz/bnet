@@ -5,6 +5,7 @@
 
 #if defined(__linux__)
 
+#include <fcntl.h>
 #include <netdb.h>
 #include <netinet/tcp.h>
 #include <sys/socket.h>
@@ -94,6 +95,15 @@ inline auto set_broadcast(SocketHandle const socket, bool enabled) -> std::int64
 	return ::setsockopt(socket, SOL_SOCKET, SO_BROADCAST, &value, sizeof(value));
 }
 
+inline auto set_non_blocking(SocketHandle fd, bool enabled) -> std::int64_t {
+	auto flags = ::fcntl(fd, F_GETFL, 0);
+	if (flags == -1) { return -1; }
+	flags = enabled ? (flags | O_NONBLOCK) : (flags & ~O_NONBLOCK);
+	return ::fcntl(fd, F_SETFL, flags); // NOLINT
+}
+
+inline auto would_block() -> bool { return errno == EWOULDBLOCK || errno == EAGAIN; }
+
 #elif defined(_WIN32)
 
 using SockLen = int;
@@ -165,6 +175,13 @@ inline auto set_broadcast(SocketHandle const socket, bool enabled) -> std::int64
 	void const* erased = &value;
 	return ::setsockopt(socket, SOL_SOCKET, SO_BROADCAST, static_cast<char const*>(erased), sizeof(value));
 }
+
+inline auto set_non_blocking(SocketHandle fd, bool enabled) -> std::int64_t {
+	u_long value = enabled ? 1u : 0u;
+	return ::ioctlsocket(fd, static_cast<long>(FIONBIO), &value);
+}
+
+inline auto would_block() -> bool { return WSAGetLastError() == WSAEWOULDBLOCK; }
 
 #endif
 } // namespace bnet::platform
