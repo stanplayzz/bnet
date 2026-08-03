@@ -177,7 +177,7 @@ inline auto set_broadcast(SocketHandle const socket, bool enabled) -> std::int64
 }
 
 inline auto set_non_blocking(SocketHandle fd, bool enabled) -> std::int64_t {
-	BOOL value{enabled ? 1 : 0};
+	u_long value{enabled ? 1 : 0};
 	return ::ioctlsocket(fd, static_cast<long>(FIONBIO), &value);
 }
 
