@@ -171,13 +171,13 @@ inline auto set_send_timeout(SocketHandle const socket, std::int64_t millis) -> 
 }
 
 inline auto set_broadcast(SocketHandle const socket, bool enabled) -> std::int64_t {
-	BOOL value = enabled ? 1u : 0u;
+	BOOL value{enabled ? 1 : 0};
 	void const* erased = &value;
 	return ::setsockopt(socket, SOL_SOCKET, SO_BROADCAST, static_cast<char const*>(erased), sizeof(value));
 }
 
 inline auto set_non_blocking(SocketHandle fd, bool enabled) -> std::int64_t {
-	u_long value{enabled ? 1 : 0};
+	u_long value = enabled ? 1u : 0u;
 	return ::ioctlsocket(fd, static_cast<long>(FIONBIO), &value);
 }
 
