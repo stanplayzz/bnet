@@ -40,12 +40,12 @@ class UDPSocket {
 	/// @brief Sends a single datagram to the given address.
 	/// @param data Payload to send.
 	/// @param address Destination host and port.
-	[[nodiscard]] auto send_to(std::span<std::byte const> data, Address const& address) const -> Result<void>;
+	auto send_to(std::span<std::byte const> data, Address const& address) const -> Result<void>;
 	/// @brief Receives a single datagram from any sender.
 	/// @param buffer Destination buffer, must be at least the size of the incomming message.
 	/// @param address Set to the sender's address on success.
 	/// @return The number of bytes written into @p buffer
-	[[nodiscard]] auto receive_from(std::span<std::byte> buffer, Address& address) const -> Result<std::size_t>;
+	auto receive_from(std::span<std::byte> buffer, Address& address) const -> Result<std::size_t>;
 
 	/// @brief Sets send and receive timeout for this connection only.
 	/// @param timeout Maximum time to wait per send/receive call.
