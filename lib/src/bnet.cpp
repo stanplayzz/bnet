@@ -37,7 +37,7 @@ auto get_addr_info(char const* host, char const* port) -> std::unique_ptr<addrin
 	return std::unique_ptr<addrinfo, AddrInfoDeleter>{ptr};
 }
 
-auto resolve_peer_address(int fd) -> Address {
+auto resolve_peer_address(platform::SocketHandle fd) -> Address {
 	auto storage = sockaddr_storage{};
 	auto len = platform::SockLen(sizeof(storage));
 
