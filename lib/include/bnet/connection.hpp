@@ -3,6 +3,7 @@
 #include "bnet/error.hpp"
 #include "bnet/socket.hpp"
 #include <chrono>
+#include <utility>
 
 namespace bnet {
 /// @brief A bidirectional TCP connection.
@@ -13,7 +14,7 @@ namespace bnet {
 class Connection {
   public:
 	/// @brief Wraps an already connected socket.
-	explicit Connection(Socket socket) : m_socket(std::move(socket)) {}
+	explicit Connection(Socket socket, Address address) : m_socket(std::move(socket)), m_address(std::move(address)) {}
 
 	/// @brief Resolves and connects to an endpoint.
 	/// @param adress Host and Port to connect to.
@@ -49,7 +50,11 @@ class Connection {
 	/// @param timeout Maximum time to wait per send/receive call.
 	auto set_timeout(std::chrono::milliseconds timeout) -> Result<void>;
 
+	/// @brief The remote peer's address.
+	[[nodiscard]] auto remote_address() const -> Address const& { return m_address; }
+
   private:
 	Socket m_socket;
+	Address m_address{};
 };
 } // namespace bnet

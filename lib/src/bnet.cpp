@@ -36,6 +36,25 @@ auto get_addr_info(char const* host, char const* port) -> std::unique_ptr<addrin
 	if (res != 0) { return {}; }
 	return std::unique_ptr<addrinfo, AddrInfoDeleter>{ptr};
 }
+
+auto resolve_peer_address(int fd) -> Address {
+	auto storage = sockaddr_storage{};
+	auto len = platform::SockLen(sizeof(storage));
+
+	Address address{};
+	// NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+	if (::getpeername(fd, reinterpret_cast<sockaddr*>(&storage), &len) != 0) { return address; }
+
+	auto host = std::array<char, NI_MAXHOST>{};
+	auto service = std::array<char, NI_MAXSERV>{};
+	// NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+	if (::getnameinfo(reinterpret_cast<sockaddr*>(&storage), len, host.data(), platform::SockLen(host.size()),
+					  service.data(), platform::SockLen(service.size()), NI_NUMERICHOST | NI_NUMERICSERV) == 0) {
+		address.host = host.data();
+		address.port = static_cast<std::uint16_t>(std::strtoul(service.data(), nullptr, 10));
+	}
+	return address;
+}
 } // namespace
 
 auto UDPSocket::set_broadcast(bool enabled) const -> Result<void> {
@@ -151,7 +170,7 @@ auto Connection::connect(Address const& address) -> Result<Connection> {
 			continue;
 		}
 		if (::connect(socket_fd, ptr->ai_addr, platform::SockLen(ptr->ai_addrlen)) != platform::error_v) {
-			return Connection{Socket{socket_fd}};
+			return Connection{Socket{socket_fd}, address};
 		}
 
 		platform::close(socket_fd);
@@ -291,7 +310,7 @@ auto Listener::accept() -> Result<Connection> {
 		}
 
 		if (!m_blocking) { platform::set_non_blocking(fd, false); }
-		return Connection{Socket{fd}};
+		return Connection{Socket{fd}, resolve_peer_address(fd)};
 	}
 }
 
